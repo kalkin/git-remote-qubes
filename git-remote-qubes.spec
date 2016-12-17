@@ -3,7 +3,7 @@
 %define mybuildnumber %{?build_number}%{?!build_number:1}
 
 Name:           git-remote-qubes
-Version:        0.0.2
+Version:        0.0.2.1
 Release:        %{mybuildnumber}%{?dist}
 Summary:        Inter-VM git push and pull for Qubes OS AppVMs and StandaloneVMs
 BuildArch:      noarch
