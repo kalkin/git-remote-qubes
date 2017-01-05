@@ -6,7 +6,7 @@ PROGNAME=git-remote-qubes
 SITELIBDIR=`python2 -c 'import distutils.sysconfig; print distutils.sysconfig.get_python_lib()'`
 
 OBJLIST=$(shell find src/gitremotequbes -name '*.py' | sed 's/.py$$/.pyc/')
-SUBSTLIST=etc/qubes-rpc/ruddo.Git
+SUBSTLIST=etc/qubes-rpc/ruddo.Git.Receive etc/qubes-rpc/ruddo.Git.Upload
 
 all: $(OBJLIST) $(SUBSTLIST) bin/git-*-qubes
 
@@ -35,8 +35,10 @@ install-vm: all
 	install -Dm 644 src/gitremotequbes/*.py src/gitremotequbes/*.pyc -t $(DESTDIR)/$(SITELIBDIR)/gitremotequbes/
 	install -Dm 755 bin/git-local-qubes -t $(DESTDIR)/$(LIBEXECDIR)/
 	install -Dm 755 bin/git-remote-qubes -t $(DESTDIR)/$(LIBEXECDIR)/git-core/
-	install -Dm 755 etc/qubes-rpc/ruddo.Git -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/
+	install -Dm 755 etc/qubes-rpc/ruddo.Git.Receive -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/
+	install -Dm 755 etc/qubes-rpc/ruddo.Git.Upload -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/
 
 install-dom0: all
-	install -Dm 644 etc/qubes-rpc/policy/ruddo.Git -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/policy/
+	install -Dm 644 etc/qubes-rpc/policy/ruddo.Git.Receive -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/policy/
+	install -Dm 644 etc/qubes-rpc/policy/ruddo.Git.Upload -t $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/policy/
 	getent group qubes && chgrp qubes $(DESTDIR)/$(SYSCONFDIR)/qubes-rpc/policy/ || true
