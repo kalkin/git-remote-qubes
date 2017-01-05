@@ -3,7 +3,7 @@
 %define mybuildnumber %{?build_number}%{?!build_number:1}
 
 Name:           git-remote-qubes
-Version:        0.0.2.1
+Version:        0.0.3
 Release:        %{mybuildnumber}%{?dist}
 Summary:        Inter-VM git push and pull for Qubes OS AppVMs and StandaloneVMs
 BuildArch:      noarch
@@ -61,11 +61,13 @@ fi
 %attr(0644, root, root) %{python_sitelib}/gitremotequbes/*.py
 %attr(0644, root, root) %{python_sitelib}/gitremotequbes/*.pyc
 %attr(0644, root, root) %{python_sitelib}/gitremotequbes/*.pyo
-%attr(0755, root, root) %{_sysconfdir}/qubes-rpc/ruddo.Git
+%attr(0755, root, root) %{_sysconfdir}/qubes-rpc/ruddo.Git.Receive
+%attr(0755, root, root) %{_sysconfdir}/qubes-rpc/ruddo.Git.Upload
 %doc README.md
 
 %files dom0
-%config(noreplace) %attr(0655, root, root) %{_sysconfdir}/qubes-rpc/policy/ruddo.Git
+%config(noreplace) %attr(0655, root, root) %{_sysconfdir}/qubes-rpc/policy/ruddo.Git.Receive
+%config(noreplace) %attr(0655, root, root) %{_sysconfdir}/qubes-rpc/policy/ruddo.Git.Upload
 %doc README.md
 
 %changelog
