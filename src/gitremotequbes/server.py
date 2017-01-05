@@ -9,6 +9,7 @@ import gitremotequbes.copier
 
 
 def main():
+    upload = len(sys.argv) > 1 and sys.argv[1] == "upload"
     quotedlen = sys.stdin.readline()
     quotedlen = int(quotedlen, 10)
     if quotedlen > 65535 or quotedlen < 1:
@@ -51,8 +52,12 @@ def main():
             break
         if cmd.startswith("connect "):
             cmd = cmd[8:-1]
-            assert cmd in ("git-upload-pack", "git-receive-pack"), \
-                "remote: bad command %r" % cmd
+            err_msg = "remote: bad command %r" % cmd
+            if upload:
+                assert cmd == "git-upload-pack", err_msg
+            else:
+                assert cmd == "git-receive-pack", err_msg
+
             sys.stdout.write("\n")
             # And here we go.  We no longer are in control.  Child is.
             os.execvp("git", ["git", cmd[4:], git_dir])
