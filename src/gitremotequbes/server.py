@@ -1,4 +1,5 @@
 import logging
+import time
 import os
 import shlex
 import subprocess
@@ -30,6 +31,10 @@ def main():
     logging.basicConfig(format="remote:" + logging.BASIC_FORMAT, level=level)
     l = logging.getLogger()
 
+    if git_dir.startswith('/cache/'):
+        url = git_dir.split('/cache/', 1)[1]
+        l.debug("Caching %s", url)
+        git_dir = get_from_cache(url, l)
 
     sys.stdout.write("confirmed\n")
 
@@ -54,3 +59,34 @@ def main():
             os.execvp("git", ["git", cmd[4:], git_dir])
         else:
             assert 0, "invalid command %r" % cmd
+
+
+def get_from_cache(src, l):
+    cache_dir = "/git/_cache/"
+    dst = cache_dir + src.split("://", 1)[1]
+
+    if os.path.exists("%s/config" % dst):
+        try:
+            cmd = ["stat", "-c", "%Y", "FETCH_HEAD"]
+            last_fetch = int(subprocess.check_output(cmd, cwd=dst))
+        except:
+            last_fetch = 0
+
+        now = int(time.time())
+
+        if last_fetch + (15 * 60 * 60) - now < 0:
+            update_repo(dst, l)
+    else:
+        l.info("Creating cache")
+        basedir = os.path.dirname(dst)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+        cmd = ["git", "clone", "--mirror", src, dst]
+        subprocess.Popen(cmd, cwd=cache_dir).communicate()
+    return dst
+
+
+def update_repo(dst, l):
+    l.info("Updating cache")
+    cmd = ["git", "fetch"]
+    subprocess.Popen(cmd, cwd=dst).communicate()
