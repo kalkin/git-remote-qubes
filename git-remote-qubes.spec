@@ -3,7 +3,7 @@
 %define mybuildnumber %{?build_number}%{?!build_number:1}
 
 Name:           git-remote-qubes
-Version:        0.0.3
+Version:        0.0.4
 Release:        %{mybuildnumber}%{?dist}
 Summary:        Inter-VM git push and pull for Qubes OS AppVMs and StandaloneVMs
 BuildArch:      noarch
@@ -71,5 +71,8 @@ fi
 %doc README.md
 
 %changelog
+* Wed Feb 01 2017 Bahtiar Gadimov (kalkin-) <bahtiar@gadimov.de>
+- Add caching support
+
 * Mon Oct 24 2016 Manuel Amador (Rudd-O) <rudd-o@rudd-o.com>
 - Initial release.
